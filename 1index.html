@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronouns Test — Cozy English Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #4834d4;
+            --secondary: #a29bfe;
+            --success: #00b894;
+            --error: #ff7675;
+            --bg: #f9f9ff;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Global Header (Branding) --- */
+        .branding-nav {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .academy-name {
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .author-tag {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: #f1f2f6;
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header.test-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header.test-intro h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        /* --- Auth Screen --- */
+        #auth-screen {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .input-group { margin: 30px 0; }
+        
+        input[type="text"] {
+            width: 100%;
+            max-width: 450px;
+            padding: 18px;
+            border: 3px solid #eee;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary); }
+
+        /* --- Test UI --- */
+        #test-content { display: none; width: 100%; }
+
+        .test-section {
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+
+        .question-card {
+            background: #fdfdff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #f1f2f6;
+            transition: 0.3s;
+        }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .opt-btn:hover { border-color: var(--primary-light); background: #f9faff; }
+        .opt-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .listen-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+        }
+
+        .replace-input {
+            width: 140px;
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        /* --- Result Screen --- */
+        #result-screen {
+            display: none;
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .score-box {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        /* --- Buttons --- */
+        .btn-main {
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2); }
+        .btn-success { background: var(--success); color: white; width: 100%; margin-top: 20px; }
+        .btn-email { background: #ff9f43; color: white; width: 100%; margin-top: 20px; }
+
+        /* --- Feedback --- */
+        .ans-correct { border: 2px solid var(--success) !important; background: #e3f9f5 !important; }
+        .ans-wrong { border: 2px solid var(--error) !important; background: #fff5f5 !important; }
+
+        footer { text-align: center; margin-top: 50px; color: var(--text-muted); font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        @media (max-width: 600px) {
+            .branding-nav { flex-direction: column; gap: 10px; text-align: center; }
+            .test-intro h1 { font-size: 1.8rem; }
+            #auth-screen { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="branding-nav">
+        <span class="academy-name">COZY ENGLISH ACADEMY</span>
+        <span class="author-tag">Author: Rajabova Farangis</span>
+    </nav>
+
+    <div class="container">
+        
+        <header class="test-intro">
+            <h1>PRONOUNS TEST</h1>
+            <p style="color: var(--text-muted); font-weight: 600;">Measure your grammar skills (Beginner Level)</p>
+        </header>
+
+        <!-- REGISTRATION -->
+        <div id="auth-screen">
+            <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Welcome Student!</h2>
+            <p style="color: var(--text-muted);">Please enter your full name to start the test.</p>
+            <div class="input-group">
+                <input type="text" id="userName" placeholder="First & Last Name" required>
+            </div>
+            <button class="btn-main btn-primary" onclick="startTest()">Start Test Now</button>
+        </div>
+
+        <!-- TEST CONTENT -->
+        <div id="test-content">
+            <div class="test-section">
+                <h2 class="section-title">Section 1: Subject Pronouns</h2>
+                <div id="s1-list"></div>
+            </div>
+
+            <div class="test-section">
+                <h2 class="section-title">Section 2: Object Pronouns</h2>
+                <div id="s2-list"></div>
+            </div>
+
+            <div class="test-section">
+                <h2 class="section-title">Section 3: Replace the Words</h2>
+                <div id="s3-list"></div>
+            </div>
+
+            <div class="test-section">
+                <h2 class="section-title">Section 4: Listening Task 🔊</h2>
+                <div id="s4-list"></div>
+            </div>
+
+            <button class="btn-main btn-success" onclick="finishTest()">Finish & Check My Score</button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen">
+            <h2 id="res-greeting" style="color: var(--primary-dark); font-size: 2rem;">Excellent!</h2>
+            <p>You have successfully finished the test.</p>
+            <div class="score-box" id="score-val">0/20</div>
+            
+            <button class="btn-main btn-email" onclick="sendToTeacher()">
+                📧 Send Result to Teacher
+            </button>
+            
+            <button class="btn-main" style="background:#b2bec3; color:white; width:100%; margin-top:15px;" onclick="location.reload()">
+                Restart Test
+            </button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>COZY ENGLISH ACADEMY — 2024</p>
+        <p style="font-size: 0.8rem; margin-top: 5px;">Built for excellence in learning.</p>
+    </footer>
+
+    <script>
+        let studentName = "";
+        const teacherEmail = "akhmedovmirmahmad@gmail.com";
+        const userSelections = {};
+
+        // Question Data
+        const s1Data = [
+            { id: 's1q1', q: "___ am a teacher.", opts: ['Me', 'I', 'My'], ans: 'I' },
+            { id: 's1q2', q: "___ is a tall man.", opts: ['He', 'Him', 'His'], ans: 'He' },
+            { id: 's1q3', q: "___ is beautiful.", opts: ['Her', 'She', 'Hers'], ans: 'She' },
+            { id: 's1q4', q: "___ are happy family.", opts: ['We', 'Us', 'Me'], ans: 'We' },
+            { id: 's1q5', q: "___ is a big cat.", opts: ['It', 'Its', 'They'], ans: 'It' }
+        ];
+
+        const s2Data = [
+            { id: 's2q1', q: "Can you see ___? (I)", opts: ['I', 'me', 'my'], ans: 'me' },
+            { id: 's2q2', q: "I know ___! (He)", opts: ['him', 'he', 'his'], ans: 'him' },
+            { id: 's2q3', q: "Help ___ please. (We)", opts: ['we', 'us', 'our'], ans: 'us' },
+            { id: 's2q4', q: "Listen to ___. (She)", opts: ['she', 'her', 'hers'], ans: 'her' },
+            { id: 's2q5', q: "I like ___! (They)", opts: ['them', 'they', 'their'], ans: 'them' }
+        ];
+
+        const s3Data = [
+            { id: 's3q1', q: "Ali is my friend. ___ is a student.", ans: "He" },
+            { id: 's3q2', q: "The dog is hungry. ___ is black.", ans: "It" },
+            { id: 's3q3', q: "Anna is at home. ___ is sleeping.", ans: "She" },
+            { id: 's3q4', q: "Tom and I are here. ___ are ready.", ans: "We" },
+            { id: 's3q5', q: "The books are old. ___ are cheap.", ans: "They" }
+        ];
+
+        const s4Data = [
+            { id: 's4q1', voice: "I love her.", opts: ['her', 'she', 'him'], ans: 'her' },
+            { id: 's4q2', voice: "We are students.", opts: ['we', 'us', 'they'], ans: 'we' },
+            { id: 's4q3', voice: "Give it to me.", opts: ['me', 'I', 'my'], ans: 'me' },
+            { id: 's4q4', voice: "He helps us.", opts: ['we', 'us', 'him'], ans: 'us' },
+            { id: 's4q5', voice: "Look at them.", opts: ['they', 'them', 'their'], ans: 'them' }
+        ];
+
+        function startTest() {
+            const nameInput = document.getElementById('userName').value.trim();
+            if (!nameInput) { alert("Please enter your name!"); return; }
+            studentName = nameInput;
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('test-content').style.display = 'block';
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            // MCQ sections (1, 2, 4)
+            const renderMCQ = (data, containerId) => {
+                const container = document.getElementById(containerId);
+                data.forEach(q => {
+                    const div = document.createElement('div');
+                    div.className = 'question-card';
+                    div.id = `card-${q.id}`;
+                    div.innerHTML = `
+                        <span class="q-text">${q.voice ? 'Listen and choose:' : q.q}</span>
+                        ${q.voice ? `<button class="listen-btn" onclick="speak('${q.voice}')">🔊</button>` : ''}
+                        <div class="options-grid">
+                            ${q.opts.map(o => `<button class="opt-btn" onclick="selectOpt('${q.id}', '${o}', this)">${o}</button>`).join('')}
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            };
+
+            renderMCQ(s1Data, 's1-list');
+            renderMCQ(s2Data, 's2-list');
+            renderMCQ(s4Data, 's4-list');
+
+            // Input section (3)
+            const s3List = document.getElementById('s3-list');
+            s3Data.forEach(q => {
+                const div = document.createElement('div');
+                div.className = 'question-card';
+                div.id = `card-${q.id}`;
+                div.innerHTML = `
+                    <span class="q-text">${q.q.replace('___', `<input type="text" class="replace-input" id="input-${q.id}" placeholder="...">`)}</span>
+                `;
+                s3List.appendChild(div);
+            });
+        }
+
+        function selectOpt(qId, val, btn) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            userSelections[qId] = val;
+        }
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = 0.8;
+            window.speechSynthesis.speak(u);
+        }
+
+        function finishTest() {
+            let score = 0;
+
+            // Check MCQ
+            [...s1Data, ...s2Data, ...s4Data].forEach(q => {
+                const card = document.getElementById(`card-${q.id}`);
+                if (userSelections[q.id] === q.ans) {
+                    score++;
+                    card.classList.add('ans-correct');
+                } else {
+                    card.classList.add('ans-wrong');
+                }
+            });
+
+            // Check Input
+            s3Data.forEach(q => {
+                const card = document.getElementById(`card-${q.id}`);
+                const userVal = document.getElementById(`input-${q.id}`).value.trim();
+                if (userVal.toLowerCase() === q.ans.toLowerCase()) {
+                    score++;
+                    card.classList.add('ans-correct');
+                } else {
+                    card.classList.add('ans-wrong');
+                }
+            });
+
+            showResult(score);
+        }
+
+        function showResult(score) {
+            document.getElementById('test-content').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('res-greeting').innerText = `Well done, ${studentName}!`;
+            document.getElementById('score-val').innerText = `${score} / 20`;
+            window.finalScore = `${score} / 20`;
+        }
+
+        function sendToTeacher() {
+            const date = new Date().toLocaleString();
+            const subject = encodeURIComponent(`Test Result: Pronouns - COZY ENGLISH ACADEMY`);
+            const body = encodeURIComponent(
+                `PRONOUNS TEST RESULT\n` +
+                `------------------------------------\n` +
+                `Student Name: ${studentName}\n` +
+                `Final Score: ${window.finalScore}\n` +
+                `Date: ${date}\n` +
+                `Topic: Pronouns (Beginner)\n` +
+                `------------------------------------\n` +
+                `Academy: COZY ENGLISH ACADEMY\n` +
+                `Author: Rajabova Farangis`
+            );
+            window.location.href = `mailto:${teacherEmail}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
